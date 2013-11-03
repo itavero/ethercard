@@ -353,12 +353,15 @@ uint8_t EtherCard::begin (const uint16_t size,
 }
 
 bool EtherCard::staticSetup (const uint8_t* my_ip,
-                              const uint8_t* gw_ip,
-                               const uint8_t* dns_ip) {
+								const uint8_t* my_mask,
+								const uint8_t* gw_ip,
+								const uint8_t* dns_ip) {
   using_dhcp = false;
 
   if (my_ip != 0)
     copyIp(myip, my_ip);
+  if (my_mask != 0)
+    copyIp(mymask, my_mask);
   if (gw_ip != 0)
     setGwIp(gw_ip);
   if (dns_ip != 0)

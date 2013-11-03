@@ -649,12 +649,10 @@ word EtherCard::packetLoop (word plen) {
   if (eth_type_is_ip(plen)==0) {
     return 0;	//not ip traffic
   }
-  if(is_my_ip(plen) || is_multicast_ip(plen))
-  {
-	  if (ether.udpServerListening() && gPB[IP_PROTO_P]==IP_PROTO_UDP_V) {
-		if(ether.udpServerHasProcessedPacket(plen))
+  if (ether.udpServerListening() && gPB[IP_PROTO_P]==IP_PROTO_UDP_V) {
+	if(ether.udpServerHasProcessedPacket(plen)) {
 			return 0;
-	  }
+		}
   }
   if(is_my_ip(plen) ==0) {
   	return 0;	//not for me

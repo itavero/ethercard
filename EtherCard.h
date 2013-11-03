@@ -39,9 +39,10 @@
 #include "net.h"
 
 typedef void (*UdpServerCallback)(
+	uint8_t dest_ip[4],	// the address the packet was sent to
 	uint16_t dest_port,	// the port the packet was sent to
 	uint8_t src_ip[4],	// the ip of the sender
-	const char *data,			// the data
+	const char *data,	// the data
 	uint16_t len);		// the length of the data
 
 typedef struct {
@@ -153,8 +154,9 @@ public:
   static uint8_t begin (const uint16_t size, const uint8_t* macaddr,
                         uint8_t csPin =8);  
   static bool staticSetup (const uint8_t* my_ip =0,
-                            const uint8_t* gw_ip =0,
-                             const uint8_t* dns_ip =0);
+							const uint8_t* my_mask =0,
+							const uint8_t* gw_ip =0,
+							const uint8_t* dns_ip =0);
   // tcpip.cpp
   static void initIp (uint8_t *myip,uint16_t wwwp);
   static void makeUdpReply (char *data,uint8_t len, uint16_t port);
@@ -193,8 +195,12 @@ public:
   static void persistTcpConnection(bool persist);
 
   //udpserver.cpp
+  static void udpServerListen(UdpServerCallback callback, uint8_t address[4], uint16_t port, bool allAddresses = false);
+  static void udpServerListen(UdpServerCallback callback, uint16_t port, bool allAddresses = true);
   static void udpServerListenOnPort(UdpServerCallback callback, uint16_t port);
+  static void udpServerPauseListen(uint8_t address[4], uint16_t port);
   static void udpServerPauseListenOnPort(uint16_t port);
+  static void udpServerResumeListen(uint8_t address[4], uint16_t port);
   static void udpServerResumeListenOnPort(uint16_t port);
   static bool udpServerListening();						//called by tcpip, in packetLoop
   static bool udpServerHasProcessedPacket(word len);	//called by tcpip, in packetLoop
@@ -209,6 +215,7 @@ public:
   // dns.cpp
   static bool dnsLookup (prog_char* name, bool fromRam =false);
   // webutil.cpp
+  static bool compareAddresses(uint8_t ip_a[4], uint8_t ip_b[4]);
   static void copyIp (uint8_t *dst, const uint8_t *src);
   static void copyMac (uint8_t *dst, const uint8_t *src);
   static void printIp (const byte *buf);

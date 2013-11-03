@@ -3,8 +3,13 @@
 // Copyright: GPL V2
 //
 // 2010-05-20 <jc@wippler.nl>
+// 2013-11-03 Arno Moonen <info@arnom.nl>
 
 #include "EtherCard.h"
+
+bool EtherCard::compareAddresses(uint8_t ip_a[4], uint8_t ip_b[4]) {
+	return (memcmp(ip_a, ip_b, 4) == 0);
+}
 
 void EtherCard::copyIp (byte *dst, const byte *src) {
     memcpy(dst, src, 4);
